@@ -2,7 +2,7 @@
 //  PhotosModel.swift
 //  Navigation
 //
-//  Created by Валерий Климченко on 19.06.2023.
+// Created by 마리나 on 19.06.2023.
 //
 
 import UIKit

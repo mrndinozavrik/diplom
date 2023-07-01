@@ -14,6 +14,7 @@ class PostViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemMint
         
+        
         barButtonItem()
         title = "Мой пост"
     }

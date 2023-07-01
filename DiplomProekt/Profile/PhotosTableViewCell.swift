@@ -2,30 +2,23 @@
 //  PhotosTableViewCell.swift
 //  Navigation
 //
-//  Created by Валерий Климченко on 17.06.2023.
+// Created by 마리나 on 19.06.2023.
 //
 
 import UIKit
 
 final class PhotosTableViewCell: UITableViewCell {
     
-    private let descriptionLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .systemFont(ofSize: 14, weight: .medium)
-        label.textColor = .lightGray
-        label.numberOfLines = 0
-        return label
-    }()
-    
     private let whiteContentView: UIView = {
        let view = UIView()
-//        view.backgroundColor = .red
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .white
         return view
     }()
     
     private let photosLabel: UILabel = {
         let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Photos"
         label.font = .systemFont(ofSize: 18, weight: .bold, width: .standard)
         return label
@@ -57,24 +50,34 @@ final class PhotosTableViewCell: UITableViewCell {
     
     private func customiseCollection() {
         photoCollectionView.backgroundColor = .cyan
+//        contentView.backgroundColor = .red
+        contentView.layer.cornerRadius = 5
     }
     
 //MARK: private metods
     private func layout() {
         let safeArea = contentView
-//        let inset: CGFloat = 8
-//        let photoLabelInset: CGFloat = 12
+        let inset: CGFloat = 0
+        let photoLabelInset: CGFloat = 12
 //        let photoLabelHeight: CGFloat = 50
 //        let photoLabelWidth: CGFloat = 300
-        let photoCollectionViewHeight: CGFloat = 120
-
-        [photoCollectionView].forEach { contentView.addSubview($0) }
+//        let photoCollectionViewHeight: CGFloat = 120
+        
+        [whiteContentView, photosLabel, photoCollectionView].forEach { contentView.addSubview($0) }
         NSLayoutConstraint.activate([
-            photoCollectionView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            photoCollectionView.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            photoCollectionView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            photoCollectionView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
-//            photoCollectionView.heightAnchor.constraint(equalToConstant: photoCollectionViewHeight)
+            whiteContentView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            whiteContentView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            whiteContentView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            whiteContentView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            
+            photosLabel.leadingAnchor.constraint(equalTo: whiteContentView.leadingAnchor, constant: photoLabelInset),
+            photosLabel.topAnchor.constraint(equalTo: whiteContentView.topAnchor, constant: photoLabelInset),
+
+            photoCollectionView.leadingAnchor.constraint(equalTo: whiteContentView.leadingAnchor, constant: inset),
+            photoCollectionView.topAnchor.constraint(equalTo: photosLabel.bottomAnchor, constant: inset),
+            photoCollectionView.trailingAnchor.constraint(equalTo: whiteContentView.trailingAnchor),
+            photoCollectionView.bottomAnchor.constraint(equalTo: whiteContentView.bottomAnchor, constant: -inset)
+
         ])
         
     }
@@ -100,7 +103,7 @@ extension PhotosTableViewCell: UICollectionViewDataSource {
 extension UITableViewCell: UICollectionViewDelegateFlowLayout {
 
     private var insetMinimumInterItemSpasing: CGFloat { return 8 }
-    private var insetForSection: CGFloat { return 8 }
+    private var insetForSection: CGFloat { return 12 }
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = (collectionView.bounds.width - 3 * insetMinimumInterItemSpasing - 2 * insetForSection) / 4
@@ -124,4 +127,10 @@ extension UITableViewCell: UICollectionViewDelegateFlowLayout {
         insetMinimumInterItemSpasing
     }
 
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+
+        print("collection")
+        
+  
+    }
 }

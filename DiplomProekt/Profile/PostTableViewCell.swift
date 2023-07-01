@@ -2,7 +2,7 @@
 //  CustomTableViewCell.swift
 //  Navigation
 //
-//  Created by Валерий Климченко on 09.06.2023.
+// Created by 마리나 on 19.06.2023.
 //
 
 import UIKit
@@ -49,8 +49,6 @@ final class PostTableViewCell: UITableViewCell {
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.numberOfLines = 2
         
-//        label.addGestureRecognizer(UITapGestureRecognizer(target: PostTableViewCell.self, action: #selector(numberLikesIncrease)))
-//        label.isUserInteractionEnabled = true
         return label
     }()
     
@@ -60,7 +58,7 @@ final class PostTableViewCell: UITableViewCell {
         label.textColor = .black
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.numberOfLines = 2
-//        label.text = "Views: 333"
+
         return label
     }()
     
@@ -84,12 +82,33 @@ final class PostTableViewCell: UITableViewCell {
     }
     
     //MARK: func
+//    @objc func numberLikes(model: PostModel) {
+//        if likesLabel.isUserInteractionEnabled == true{
+//            PostModel.likes += 1
+//        }
+//    }
+//
+//    @objc func numberView(model: PostModel) {
+//        if whiteView.isUserInteractionEnabled == true{
+//            PostModel.views += 1
+//        }
+//    }
+    
     func setupCell(model: PostModel) {
         headerLabel.text = model.author
         postImage.image = UIImage(named: model.image)
         descriptionLabel.text = model.description
-        likesLabel.text = String("Likes: \(model.likes)")
-        viewsLabel.text = String("Views \(model.views)")
+        if likesLabel.isUserInteractionEnabled == true{
+            likesLabel.text = String("Likes: \(model.likes + 1)")}
+        if whiteView.isUserInteractionEnabled == true{
+            viewsLabel.text = String("Views \(model.views + 1)")}
+//        if whiteView.isUserInteractionEnabled == true{
+//            model.views += 1
+//        }
+//        if likesLabel.isUserInteractionEnabled == true{
+//            model.likes += 1
+//            likesLabel.text = String("Likes: \(model.likes + 1)")
+//        }
     }
 
 //MARK: private funcs
@@ -129,12 +148,10 @@ final class PostTableViewCell: UITableViewCell {
             viewsLabel.trailingAnchor.constraint(equalTo: whiteView.trailingAnchor, constant: -inset),
             viewsLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: inset),
             viewsLabel.bottomAnchor.constraint(equalTo: whiteView.bottomAnchor, constant: -inset),
-            viewsLabel.widthAnchor.constraint(equalToConstant: width)
+            viewsLabel.widthAnchor.constraint(equalToConstant: width),
+            
         ])
     }
     
-//    @objc func numberLikesIncrease() {
-//        print("123")
-//    }
-    
+
 }

@@ -4,7 +4,6 @@ class FeedViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemYellow
     }
     
     override func viewDidLayoutSubviews() {
@@ -13,7 +12,7 @@ class FeedViewController: UIViewController {
         let button = UIButton(type: .system)
         button.frame = CGRect(origin: CGPoint(x: 120, y: 370), size: CGSize(width: 150, height: 50))
         button.setTitle("Go to Post", for: .normal)
-        button.backgroundColor = .white
+        button.backgroundColor = .systemBlue
         button.tintColor = .black
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 22)
         button.layer.cornerRadius = 20

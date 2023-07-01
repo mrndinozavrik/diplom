@@ -2,7 +2,7 @@
 //  CustomCollectionGalery.swift
 //  Navigation
 //
-//  Created by Валерий Климченко on 26.06.2023.
+//  Created by 마리나 on 28.06.2023.
 //
 
 import UIKit
@@ -15,7 +15,7 @@ final class CustomCollectionGalery: UICollectionViewCell {
         image.contentMode = .scaleToFill
         image.layer.cornerRadius = 6
         image.clipsToBounds = true
-//        image.image = UIImage(named: "1")
+        image.image = UIImage(named: "1")
         return image
     }()
     

@@ -13,6 +13,13 @@ class ProfileHeaderView: UIView {
     
     private(set) var statusText = ""
     
+    private let whiteView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .systemGray6
+        return view
+    }()
+
     let avatarImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -29,7 +36,7 @@ class ProfileHeaderView: UIView {
     private let avatarLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Hot Cat"
+        label.text = "Suga"
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.5
         label.font = UIFont.boldSystemFont(ofSize: 18)
@@ -75,7 +82,16 @@ class ProfileHeaderView: UIView {
         button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
         return button
     }()
-    
+//    private var emptyLine: UILabel {
+//        let empty = UILabel()
+//        empty.text = "Введите статус"
+//        empty.translatesAutoresizingMaskIntoConstraints = false
+//        empty.textColor = .gray
+//        empty.font = UIFont.systemFont(ofSize: 12)
+//        empty.isHidden = false
+//        
+//        return empty
+//    }
     
     //MARK: - Init
     
@@ -94,11 +110,13 @@ class ProfileHeaderView: UIView {
     //MARK: - Private func
     
     private func setupViews() {
-        addSubview(avatarLabel)
-        addSubview(statusButton)
-        addSubview(statusLabel)
-        addSubview(statusField)
-        addSubview(avatarImageView)
+        addSubview(whiteView)
+        [avatarLabel, statusButton, statusLabel, statusField, avatarImageView].forEach { whiteView.addSubview($0) }
+//        addSubview(avatarLabel)
+//        addSubview(statusButton)
+//        addSubview(statusLabel)
+//        addSubview(statusField)
+//        addSubview(avatarImageView)
     }
     
     private func addTapGestureRecognizer(to imageView: UIImageView) {
@@ -118,11 +136,14 @@ class ProfileHeaderView: UIView {
     //MARK: - Actions
     
     @objc private func avatarTapped() {
-        guard let profileViewController = findViewController() as? ProfileViewController else { return }
+        guard findViewController() is ProfileViewController else { return }
 
     }
     
     @objc private func buttonPressed() {
+        if statusField.text == nil{
+            statusField.placeholder = "Введите статус"
+        }
         statusLabel.text = statusText
         statusField.text = ""
         print("Status Text: \(statusText)")
@@ -141,32 +162,42 @@ class ProfileHeaderView: UIView {
 
 extension ProfileHeaderView {
     private func setupAutoLayout() {
+//не понимаю что с этим activate не так я уже намучилась с нми
+//        let safeArea = view.safeAreaLayoutGuide
+//        [avatarLabel, statusButton, statusLabel, statusField, avatarImageView].forEach { whiteView.addSubview($0)}
         NSLayoutConstraint.activate([
+            whiteView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            whiteView.topAnchor.constraint(equalTo: topAnchor),
+            whiteView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            whiteView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            
             avatarImageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 16),
             avatarImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             avatarImageView.widthAnchor.constraint(equalToConstant: 100),
             avatarImageView.heightAnchor.constraint(equalToConstant: 100),
             
-            
             avatarLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 27),
-            avatarLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16),
+            avatarLabel.leadingAnchor.constraint(equalTo: avatarImageView.leadingAnchor, constant: 16),
+            avatarLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            avatarLabel.heightAnchor.constraint(equalToConstant: 20),
             
-            
-            statusLabel.bottomAnchor.constraint(equalTo: statusButton.topAnchor, constant: -60),
-            statusLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16),
-            
+            statusLabel.topAnchor.constraint(equalTo: statusButton.bottomAnchor, constant: -60),
+            statusLabel.leadingAnchor.constraint(equalTo: avatarImageView.leadingAnchor, constant: 16),
+            statusLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            statusLabel.heightAnchor.constraint(equalToConstant: 16),
             
             statusField.topAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 11),
-            statusField.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16),
+            statusField.leadingAnchor.constraint(equalTo: avatarImageView.leadingAnchor, constant: 16),
             statusField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             statusField.heightAnchor.constraint(equalToConstant: 40),
-            
-            
+                        
             statusButton.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 16),
             statusButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             statusButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             statusButton.heightAnchor.constraint(equalToConstant: 50),
             
+            
         ])
     }
 }
+

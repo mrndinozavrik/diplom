@@ -7,7 +7,7 @@
 
 import UIKit
 
-class LoginViewController: UIView {
+class LoginViewController: UIViewController {
     
     private let scrollView: UIScrollView = {
         let view = UIScrollView()
@@ -23,7 +23,7 @@ class LoginViewController: UIView {
     
     private let logo: UIImageView = {
         let view = UIImageView()
-        view.layer.contents = UIImage(named: "logo")?.cgImage
+        view.image = UIImage(named: "logo")
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -43,16 +43,16 @@ class LoginViewController: UIView {
         let login = UITextField()
         login.textColor = .black
         login.placeholder = "email or phone"
-        login.indent(size: 10)
         login.isSecureTextEntry = true
         login.autocapitalizationType = .none
         login.font = UIFont(name: "bias_Suga", size: 16)
         login.translatesAutoresizingMaskIntoConstraints = false
-        login.tintColor = .colorSet
         login.isSecureTextEntry = false
         
+        login.indent(size: 10)
+        
         login.delegate = self
-        //        textField.addTarget(self, action: #selector(hideKeyboard), for: .editingDidEndOnExit)
+        
         return login
     }()
     
@@ -78,17 +78,10 @@ class LoginViewController: UIView {
         return password
     }()
     
+
     
     
-    func depositToAccount () {
-        if passwordField.text == nil{
-            
-            
-        }else {
-        }
-    }
-    
-    private let logInButton: UIButton = {
+    private let loginButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 10
@@ -99,11 +92,11 @@ class LoginViewController: UIView {
         button.clipsToBounds = true
         
         switch button.state {
-            case .normal      : button.alpha = 1
-            case .selected    : button.alpha = 0.8
-            case .highlighted : button.alpha = 0.8
-            case .disabled    : button.alpha = 0.8
-            default: button.alpha = 1
+        case .normal      : button.alpha = 1
+        case .selected    : button.alpha = 0.8
+        case .highlighted : button.alpha = 0.8
+        case .disabled    : button.alpha = 0.8
+        default: button.alpha = 1
         }
         
         button.addTarget(nil, action: #selector(goToProfileViewController), for: .touchUpInside)
@@ -111,33 +104,58 @@ class LoginViewController: UIView {
         return button
     }()
     
-    
+    private var wrongData : UIAlertController{
+        let wrong = UIAlertController(title: "Ошибка", message: "Логин или пароль введены не верно", preferredStyle: .alert)
+        
+        wrong.addAction(UIAlertAction(title: "Закрыть", style: .cancel, handler: nil))
+        present(wrong, animated: true)
+        
+        return wrong
+    }
     
     //MARK: life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .white
-        layout()
+        setupAutoLayout()
         self.navigationController?.navigationBar.isHidden = true
     }
     
     //MARK: functions
     @objc func goToProfileViewController() {
-        navigationController?.pushViewController(ProfileViewController(), animated: true)
-        
+        if passwordField.text == nil {
+            passwordField.placeholder  = "Введите пароль"
+        } else if loginField.text == nil{
+            loginField.placeholder  = "Введите логин"
+        } else{
+            if passwordField.text!.count < 5{
+                passwordField.placeholder  = "Пароль слишком короткий"
+            }else if (passwordField.text == "agustd" && loginField.text == "bias_Suga") {
+                navigationController?.pushViewController(ProfileViewController(), animated: true)
+            }else {
+                wrongData.accessibilityActivate()
+            }
+        }
     }
     
+//    private func setupViews() {
+//        addSubview(scrollView)
+//        [loginView, logo, stackViewForTextField, loginField, passwordField, textDelimeter, loginButton, emptyLine, fewСharacters].forEach { scrollView.addSubview($0) }
+//    }
     
-    private func layout() {
+}
+
+extension LoginViewController{
+    private func setupAutoLayout() {
         let safeArea = view.safeAreaLayoutGuide
-        
+//        [loginView, logo, stackViewForTextField, loginField, passwordField, textDelimeter, loginButton].forEach { scrollView.addSubview($0) }
         view.addSubview(scrollView)
         NSLayoutConstraint.activate([
             scrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             scrollView.topAnchor.constraint(equalTo: safeArea.topAnchor),
             scrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
+            scrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
         ])
         
         scrollView.addSubview(loginView)
@@ -148,7 +166,7 @@ class LoginViewController: UIView {
             loginView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             loginView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
         ])
-        
+
         [logo, stackViewForTextField].forEach { loginView.addSubview($0)}
         NSLayoutConstraint.activate([
             logo.centerXAnchor.constraint(equalTo: loginView.centerXAnchor),
@@ -160,7 +178,7 @@ class LoginViewController: UIView {
             stackViewForTextField.topAnchor.constraint(equalTo: logo.bottomAnchor, constant: 120),
             stackViewForTextField.trailingAnchor.constraint(equalTo: loginView.trailingAnchor, constant: -16),
             stackViewForTextField.heightAnchor.constraint(equalToConstant: 101),
-            stackViewForTextField.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -16)
+            stackViewForTextField.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -16),
         ])
         
         [loginField, textDelimeter, passwordField].forEach { stackViewForTextField.addSubview($0) }
@@ -178,27 +196,37 @@ class LoginViewController: UIView {
             passwordField.leadingAnchor.constraint(equalTo: stackViewForTextField.leadingAnchor),
             passwordField.topAnchor.constraint(equalTo: textDelimeter.bottomAnchor),
             passwordField.trailingAnchor.constraint(equalTo: stackViewForTextField.trailingAnchor),
-            passwordField.heightAnchor.constraint(equalToConstant: 50)
+            passwordField.heightAnchor.constraint(equalToConstant: 50),
         ])
         
-        scrollView.addSubview(logInButton)
+        scrollView.addSubview(loginButton)
         NSLayoutConstraint.activate([
-            logInButton.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-            logInButton.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 16),
-            logInButton.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
-            logInButton.heightAnchor.constraint(equalToConstant: 50),
+            loginButton.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+            loginButton.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 16),
+            loginButton.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
+            loginButton.heightAnchor.constraint(equalToConstant: 50),
         ])
+//        scrollView.addSubview(wrongData)
+//        NSLayoutConstraint.activate([
+//            wrongData
+//        ])
         
-    }
-    
-    
-    
-    //MARK: extentions
-    extension LoginViewController: UITextFieldDelegate {
-        func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-            view.endEditing(true)
-        }
+
     }
 }
+
+//MARK: extentions
+extension LoginViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        view.endEditing(true)
+    }
+}
+extension UITextField {
+    func indent(size:CGFloat) {
+        self.leftView = UIView(frame: CGRect(x: self.frame.minX, y: self.frame.minY, width: size, height: self.frame.height))
+        self.leftViewMode = .always
+    }
+}
+
 
 
